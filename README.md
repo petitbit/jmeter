@@ -8,9 +8,15 @@ Find Images of this repo on [Docker Hub](https://hub.docker.com/r/petitbit/jmete
 ## Building
 
 The Docker image can be build
-from the [Dockerfile](alpine/Dockerfile) but this is not really necessary as
+from the [Dockerfile](docker/images/jmeter/Dockerfile) but this is not really necessary as
 you may use your own ``docker build`` commandline. Or better: use one
 of the pre-built Images from [Docker Hub](https://hub.docker.com/r/petitbit/jmeter).
+
+Optionally, copy settings file to modify it:
+
+``cp docker/compose/default.env docker/compose/.env``
+
+Anything you put in ``.env`` overrides values in ``default.env``. You should modify all the password fields for security, for example.
 
 ### Build Options
 
