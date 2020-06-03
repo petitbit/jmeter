@@ -3,14 +3,14 @@ version: '3.5'
 # https://docs.docker.com/compose/environment-variables/#the-env-file
 services:
   master:
-    image: petitbit/jmeter:${JMETER_VERSION:-latest}
+    image: petitbit/jmeter:${APP_VERSION:-latest}
     container_name: jmeter_master
     tty: true
     volumes:
       - ${VOLUME_PATH:-.}:${MOUNT_PATH:-/mnt/jmeter}
 
   slave:
-    image: petitbit/jmeter:${JMETER_VERSION:-latest}
+    image: petitbit/jmeter:${APP_VERSION:-latest}
     tty: true
     volumes:
       - ${VOLUME_PATH:-.}:${MOUNT_PATH:-/mnt/jmeter}

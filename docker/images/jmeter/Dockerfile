@@ -3,23 +3,21 @@ FROM alpine:3 as builder
 #
 LABEL maintainer="petitbit <petitbit@outlook.com>"
 # 
-ARG JMETER_VERSION="4.0"
+ARG APP_VERSION="4.0"
 ARG IMAGE_TIMEZONE="Asia/Tokyo"
 #
-ENV MIRROR_HOST https://archive.apache.org/dist/jmeter
+COPY script/ca-certificates.crt /etc/ssl/certs/
 # Install few utilities & Install JMeter
-RUN    apk update \
-	&& apk upgrade \
-	&& apk add -q ca-certificates \
-	&& update-ca-certificates \
-	&& apk add -q openjdk8-jre tzdata curl tar nss \
+RUN    apk --update upgrade \
+    && apk add -q openjdk8-jre tzdata curl tar nss \
     && cp /usr/share/zoneinfo/${IMAGE_TIMEZONE} /etc/localtime \
     && echo "${IMAGE_TIMEZONE}" > /etc/timezone \
-    && curl -L ${MIRROR_HOST}/binaries/apache-jmeter-${JMETER_VERSION}.tgz | tar -xz -C /opt \
-    && ln -s /opt/apache-jmeter-${JMETER_VERSION} /opt/apache-jmeter \
+    && curl -L https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${APP_VERSION}.tgz | tar -xz -C /opt \
+    && ln -s /opt/apache-jmeter-${APP_VERSION} /opt/apache-jmeter \
     && rm -rf /opt/apache-jmeter/docs/ \
     && rm -rf /opt/apache-jmeter/printable_docs/ \
-	&& rm -rf /opt/apache-jmeter/licenses/
+    && rm -rf /opt/apache-jmeter/licenses/
+
 #
 FROM openjdk:8-jre-alpine
 #
@@ -32,7 +30,7 @@ ENV PATH ${JMETER_HOME}/bin:$PATH
 COPY --from=builder /opt/apache-jmeter ${JMETER_HOME}
 COPY --from=builder /etc/localtime /etc/localtime
 COPY --from=builder /etc/timezone /etc/timezone
-#
+# https://jmeter.apache.org/usermanual/get-started.html#running
 COPY setenv.sh ${JMETER_HOME}/bin
 #
 WORKDIR ${JMETER_HOME}
