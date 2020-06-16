@@ -35,10 +35,10 @@ up: build run ## Run container on port configured in `default.env` (Alias to run
 stop: ## Stop and remove a running container
 	docker stop $(IMAGE_NAME); docker rm $(IMAGE_NAME)
 
-release: build-nc publish ## Make a release by building and publishing the `{version}` ans `latest` tagged containers to Docker Hub
+release: build-nc publish ## Make a release by building and publishing the `{version}` and `latest` tagged containers to Docker Hub
 
 # Docker publish
-publish: publish-latest publish-version ## Publish the `{version}` ans `latest` tagged containers to Docker Hub
+publish: publish-latest publish-version ## Publish the `{version}` and `latest` tagged containers to Docker Hub
 
 publish-latest: tag-latest ## Publish the `latest` taged container to Docker Hub
 	@echo 'publish latest to $(REGISTORY_PATH)'
@@ -49,7 +49,7 @@ publish-version: tag-version ## Publish the `{version}` taged container to Docke
 	docker push $(REGISTORY_PATH)/$(IMAGE_NAME):$(APP_VERSION)
 
 # Docker tagging
-tag: tag-latest tag-version ## Generate container tags for the `{version}` ans `latest` tags
+tag: tag-latest tag-version ## Generate container tags for the `{version}` and `latest` tags
 
 tag-latest: ## Generate container `{version}` tag
 	@echo 'create tag latest'

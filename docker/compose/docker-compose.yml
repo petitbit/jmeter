@@ -8,6 +8,9 @@ services:
     tty: true
     volumes:
       - ${VOLUME_PATH:-.}:${MOUNT_PATH:-/mnt/jmeter}
+    env_file:
+      - default.env
+      - .env
 
   slave:
     image: petitbit/jmeter:${APP_VERSION:-latest}
@@ -16,3 +19,6 @@ services:
       - ${VOLUME_PATH:-.}:${MOUNT_PATH:-/mnt/jmeter}
     # https://jmeter.apache.org/usermanual/properties_reference.html#remote
     command: jmeter -s -n -Dserver_port=1099 -Dserver.rmi.localport=4000 -Jserver.rmi.ssl.disable=true
+    env_file:
+      - default.env
+      - .env
