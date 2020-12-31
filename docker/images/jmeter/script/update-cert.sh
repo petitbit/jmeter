@@ -21,4 +21,3 @@ docker cp "${ID}":/etc/ssl/certs/ca-certificates.crt "${SCRIPT_DIR}"
 
 # Cleanup.
 docker rm -f "${ID}"
-

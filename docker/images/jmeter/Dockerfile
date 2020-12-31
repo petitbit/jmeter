@@ -27,9 +27,9 @@ ENV JMETER_HOME /opt/apache-jmeter
 # Add JMeter to the Path
 ENV PATH ${JMETER_HOME}/bin:$PATH
 #
-COPY --from=builder /opt/apache-jmeter ${JMETER_HOME}
 COPY --from=builder /etc/localtime /etc/localtime
 COPY --from=builder /etc/timezone /etc/timezone
+COPY --from=builder /opt/apache-jmeter ${JMETER_HOME}
 # https://jmeter.apache.org/usermanual/get-started.html#running
 COPY setenv.sh ${JMETER_HOME}/bin
 #

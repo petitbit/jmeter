@@ -15,26 +15,32 @@ help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # DOCKER TASKS
-all: test build ## go test & go build
+all: build publish ## go test & go publish
+
+# DOCKER CLEAN
+.PHONY: clean
+clean:; docker rmi ${DANGLING} > /dev/null 2>&1
 
 .PHONY: build
 # Build the container
 build: ## Build the container
 	docker build --build-arg APP_VERSION=${APP_VERSION} --cache-from $(REGISTORY_PATH)/$(IMAGE_NAME):latest -t $(IMAGE_NAME) -f docker/images/$(IMAGE_NAME)/Dockerfile docker/images/$(IMAGE_NAME)
-	docker rmi ${DANGLING} > /dev/null 2>&1
 
 build-nc: ## Build the container without caching
 	docker build --build-arg APP_VERSION=${APP_VERSION} --no-cache -t $(IMAGE_NAME) -f docker/images/$(IMAGE_NAME)/Dockerfile docker/images/$(IMAGE_NAME)
-	docker rmi ${DANGLING} > /dev/null 2>&1
 
+.PHONY: run
 run: ## Run container on port configured in `default.env`
 	docker run -i -t --rm --env-file=./docker/compose/.env --name="$(IMAGE_NAME)" $(IMAGE_NAME)
 
+.PHONY: up
 up: build run ## Run container on port configured in `default.env` (Alias to run)
 
+.PHONY: stop
 stop: ## Stop and remove a running container
 	docker stop $(IMAGE_NAME); docker rm $(IMAGE_NAME)
 
+.PHONY: release
 release: build-nc publish ## Make a release by building and publishing the `{version}` and `latest` tagged containers to Docker Hub
 
 # Docker publish
